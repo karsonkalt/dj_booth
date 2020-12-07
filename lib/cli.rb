@@ -44,7 +44,7 @@ class CLI
     
         if input.upcase == "A"
             puts ""
-            puts "Enter the URL of a playlist to add."
+            puts "Enter the 1001tracklist.com URL of a playlist you would like to add."
             input = gets.chomp
             if input.start_with?('https://www.1001tracklists.com/tracklist')
                 Scraper.new(input)
@@ -97,7 +97,7 @@ class CLI
                 elsif input.to_i > 0 && input.to_i <= @counter
                     playlist = Playlist.all[input.to_i - 1]
                     puts_announcement("#{playlist.title}")
-                    playlist.print_set
+                    print_playlist(playlist)
                 else
                     puts "Invalid response."
                     playlist_loop
@@ -141,4 +141,39 @@ class CLI
             input_loop
         end
     end
+
+    def print_playlist(playlist)
+        mashup_number = 0
+        
+        tracks_in_set = Track.all.select do |track|
+          track.playlist == playlist
+        end
+        
+        tracks_in_set.each do |track|
+    
+          if track.number != mashup_number
+            mashup_number = track.number
+            puts "Track #{track.number}".colorize(:blue)
+          else
+            puts "Track played together with previous track".colorize(:blue)
+          end
+    
+          if track.timestamp != ""
+            puts "  Cue Time: #{track.timestamp}"
+          end
+          
+          if track.label != "Unreleased"
+            puts "  #{track.title} -- #{track.artist} [#{track.label}]"
+          else
+            puts "  #{track.title} -- #{track.artist} [" + track.label.to_s.colorize(:red) + "]"
+          end
+  
+          if track.confirmation_status == "Unconfirmed"
+            puts "  Track information not confirmed".colorize(:red)
+          end
+  
+          puts ""
+        end
+    end
+
 end
