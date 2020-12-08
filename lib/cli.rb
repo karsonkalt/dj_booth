@@ -31,6 +31,7 @@ class CLI
         puts ""
         puts "A".colorize(:green) + "  - Add playlist by URL"
         puts "P".colorize(:green) + "  - View playlists"
+        puts "AR".colorize(:green) + " - View artists"
         puts "UR".colorize(:green) + " - View unreleased tracks"
         puts "UN".colorize(:green) + " - View tracks with unconfirmed status"
         puts "S".colorize(:green) + "  - Search for tracks by artist"
@@ -52,7 +53,7 @@ class CLI
                 puts "Done".colorize(:green)
                 input_loop
             else
-                puts "invlaid link"
+                puts "Invalid link"
                 input_loop
             end
     
@@ -137,12 +138,48 @@ class CLI
                 puts "No search results"
             end
             input_loop
+
+        elsif input.upcase == "AR"
+            artist_array = Track.all.collect do |track|
+                track.artist
+            end
+            artist_array.delete("ID")
+            artist_array.sort!
+            counter = 1
+            artist_array.uniq.each do |artist|
+                puts "#{counter}. #{artist}"
+                counter += 1
+            end
+
+            puts "Please enter an artist number to view their tracks"
+            input = gets.chomp.to_i
+            index = input - 1
+
+            artist_tracks = Track.all.select do |track|
+                track.artist == artist_array.uniq[index]
+            end
+
+            artist_tracks.sort_by! do |track|
+                track.title
+            end
+
+            puts_announcement(artist_array.uniq[index])
+
+            artist_tracks.each do |track|
+                if track.label != "Unreleased"
+                    puts "#{track.title} -- #{track.artist} [#{track.label}]"
+                else
+                    puts "#{track.title} -- #{track.artist} [" + track.label.to_s.colorize(:red) + "]"
+                end
+            end
+            
+            input_loop
     
         else
             puts ""
             puts "Invalid response"
             input_loop
-            
+
         end
     end
 
