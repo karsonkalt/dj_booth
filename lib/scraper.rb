@@ -36,14 +36,14 @@ class Scraper
             track.title = track_info.split(" - ")[1]
             track.timestamp = post.css(".cueValueField").text.strip
 
-            #If statements to assign to object
+            #Check to see if any user confirmed it was played
             if post.css(".tlUserInfo").text != ""
                 track.confirmation_status = "Confirmed"
             else
                 track.confirmation_status = "Unconfirmed"
             end
 
-            #If a mashup track, use the track number of previously played track
+            #If a mashup track, use the track number of the previously played track
             if track_number != 0
                 track.number = track_number
                 mashup_number = track_number
@@ -51,6 +51,7 @@ class Scraper
                 track.number = mashup_number
             end
 
+            #If no label for the track, mark it unreleased
             if track_label[1] != nil
                 track_label_original = track_label[1].split
                 track_label_capitalize = track_label_original.collect do |word|

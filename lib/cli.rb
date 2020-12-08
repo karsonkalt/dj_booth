@@ -90,6 +90,7 @@ class CLI
                 puts "#{@counter}. #{playlist.title}"
             end
             puts ""
+
             def playlist_loop
                 puts "Enter a playlist number to view tracks or type " + "BACK".colorize(:red) + " to go back"
                 input = gets.chomp
@@ -103,6 +104,7 @@ class CLI
                     playlist_loop
                 end
             end
+
             playlist_loop
             input_loop
     
@@ -125,6 +127,7 @@ class CLI
             search_tracks = Track.all.select do |track|
                 track.artist.upcase == input.upcase
             end
+
             if search_tracks[0] != nil
                 puts_announcement("TRACKS BY #{search_tracks.first.artist.upcase}")
                 search_tracks.each do |track|
@@ -139,6 +142,7 @@ class CLI
             puts ""
             puts "Invalid response"
             input_loop
+            
         end
     end
 
