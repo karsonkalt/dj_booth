@@ -46,6 +46,7 @@ class CLI
         if input.upcase == "A"
             puts ""
             puts "Enter the 1001tracklist.com URL of a playlist you would like to add."
+            puts "For example '" + "https://www.1001tracklists.com/tracklist/x3fvvx9/guy-j-baile-union-musica-digital-fest-2020-07-04.html".colorize(:yellow) + "'"
             input = gets.chomp
             if input.start_with?('https://www.1001tracklists.com/tracklist')
                 Scraper.new(input)
